@@ -2,8 +2,6 @@ numpy
 scipy
 pandas
 matplotlib
-torch
-torchvision
 scikit-image
 scikit-learn
 fire
