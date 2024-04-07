@@ -11,6 +11,5 @@ loguru
 tensorboard
 imagecodecs
 onnx
-onnxruntime
 zarr
 ome-zarr
