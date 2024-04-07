@@ -11,3 +11,4 @@ imagecodecs
 onnx
 zarr
 ome-zarr
+onnxruntime-gpu
