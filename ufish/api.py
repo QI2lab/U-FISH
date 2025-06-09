@@ -117,9 +117,9 @@ class UFish():
         else:
             raise ValueError(f'Unknown model type: {model_type}')
         params = sum(p.numel() for p in self.model.parameters())
-        logger.info(
-            f'Initializing {model_type} model with kwargs: {kwargs}')
-        logger.info(f'Number of parameters: {params}')
+        #logger.info(
+        #    f'Initializing {model_type} model with kwargs: {kwargs}')
+        #logger.info(f'Number of parameters: {params}')
         self.model = self.model.to(self.device)
 
     def convert_to_onnx(
@@ -185,14 +185,14 @@ class UFish():
         weight_url = self.store_base_url + weights_file
         local_weight_path = self.local_store_path / weights_file
         if local_weight_path.exists() and (not force_download):
-            logger.info(
-                f'Local weights {local_weight_path} exists, '
-                'skip downloading.'
-            )
+            #logger.info(
+            #    f'Local weights {local_weight_path} exists, '
+            #    'skip downloading.'
+            #)
         else:
-            logger.info(
-                f'Downloading weights from {weight_url}, '
-                f'storing to {local_weight_path}')
+            #logger.info(
+            #    f'Downloading weights from {weight_url}, '
+            #    f'storing to {local_weight_path}')
             local_weight_path.parent.mkdir(parents=True, exist_ok=True)
             try_count = 0
             while try_count < max_retry:
@@ -289,7 +289,7 @@ class UFish():
         """
         import onnxruntime
         onnx_path = str(onnx_path)
-        logger.info(f'Loading ONNX from {onnx_path}')
+        #logger.info(f'Loading ONNX from {onnx_path}')
         if self._device == 'cuda':
             providers = providers or ['CUDAExecutionProvider']
         elif self._device == 'dml':
@@ -340,13 +340,13 @@ class UFish():
     def _enhance_img3d(
             self, img: np.ndarray, batch_size: int = 4) -> np.ndarray:
         """Enhance a 3D image."""
-        logger.info(
-            f'Enhancing 3D image in shape {img.shape}, '
-            f'batch size: {batch_size}')
+        #logger.info(
+        #    f'Enhancing 3D image in shape {img.shape}, '
+        #    f'batch size: {batch_size}')
         output = np.zeros_like(img, dtype=np.float32)
         for i in range(0, output.shape[0], batch_size):
-            logger.info(
-                f'Enhancing slice {i}-{i+batch_size}/{output.shape[0]}')
+            #logger.info(
+            #    f'Enhancing slice {i}-{i+batch_size}/{output.shape[0]}')
             _slice = img[i:i+batch_size][:, np.newaxis]
             output[i:i+batch_size] = self.infer(_slice)[:, 0]
         return output
