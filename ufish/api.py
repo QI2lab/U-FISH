@@ -189,6 +189,7 @@ class UFish():
             #    f'Local weights {local_weight_path} exists, '
             #    'skip downloading.'
             #)
+            pass
         else:
             #logger.info(
             #    f'Downloading weights from {weight_url}, '
