@@ -60,39 +60,24 @@ class UFish():
         """Get the torch device."""
         return self._get_torch_device()
 
-    def _get_torch_device(self) -> "torch.device":
-        """Get the torch device."""
+    def _get_torch_device(self) -> torch.device:
         import torch
+        # if someone passed in a full torch.device, just use it
         if isinstance(self._device, torch.device):
-            device = self._device
-            self._device = device.type
-            return device
+            return self._device
+
+        # allow strings like 'cuda:1'
+        if isinstance(self._device, str) and self._device.startswith("cuda"):
+            parts = self._device.split(":")
+            idx = int(parts[1]) if len(parts) > 1 else 0
+            return torch.device("cuda", idx)
+
+        # fall back to existing logic
         if self._device is None:
-            if torch.cuda.is_available():
-                self._device = 'cuda'
-            elif os.name == 'nt':
-                try:
-                    importlib.import_module('torch_directml')
-                    logger.info(
-                        "Using DirectML for training on Windows.")
-                    self._device = 'dml'
-                except Exception:
-                    self._device = 'cpu'
-            else:
-                self._device = 'cpu'
+            self._device = 'cuda' if torch.cuda.is_available() else 'cpu'
         if self._device == "cuda":
-            if torch.cuda.is_available():
-                return torch.device('cuda')
-            else:
-                logger.warning(
-                    "CUDA is not available, using CPU instead.")
-                return torch.device('cpu')
-        elif self._device == "dml":
-            import torch_directml
-            dml = torch_directml.device()
-            return dml
-        else:
-            return torch.device(self._device)
+            return torch.device("cuda", 0)
+        return torch.device(self._device)
 
     def init_model(
             self,
