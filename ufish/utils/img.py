@@ -28,8 +28,9 @@ def scale_image(
         if img_has_outlier(img, big_value):
             if warning:
                 from .log import logger
-                logger.warning(
-                    'Image has outlier values. ')
+                # logger.warning(
+                #     'Image has outlier values. ')
+                pass
             in_range = (0, big_value)
         else:
             in_range = 'image'
