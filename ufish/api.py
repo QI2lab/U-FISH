@@ -262,7 +262,7 @@ class UFish():
         self.model.load_state_dict(state_dict)
         self.ort_session = None
 
-    def _load_onnx(self, onnx_path: str, providers: Optional[List[str]] = None):
+    def _load_onnx(self, onnx_path: str, providers: T.Optional[list[str]] = None):
         import onnxruntime
         # decide default provider
         if self._device.startswith("cuda"):
