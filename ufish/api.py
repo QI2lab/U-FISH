@@ -264,6 +264,7 @@ class UFish():
 
     def _load_onnx(self, onnx_path: str, providers: T.Optional[list[str]] = None):
         import onnxruntime
+        onnxruntime.set_default_logger_verbosity(4)
         # decide default provider
         if self._device.startswith("cuda"):
             providers = providers or ['CUDAExecutionProvider']
