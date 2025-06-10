@@ -5,6 +5,7 @@ import typing as T
 from pathlib import Path
 import importlib
 from functools import partial, cached_property
+import torch
 
 import numpy as np
 import pandas as pd
