@@ -261,29 +261,23 @@ class UFish():
         self.model.load_state_dict(state_dict)
         self.ort_session = None
 
-    def _load_onnx(
-            self,
-            onnx_path: T.Union[Path, str],
-            providers: T.Optional[T.List[str]] = None,
-            ) -> None:
-        """Load weights from a local ONNX file,
-        and create an onnxruntime session.
-
-        Args:
-            onnx_path: The path to the ONNX file.
-            providers: The providers to use.
-        """
+    def _load_onnx(self, onnx_path: str, providers: Optional[List[str]] = None):
         import onnxruntime
-        onnx_path = str(onnx_path)
-        #logger.info(f'Loading ONNX from {onnx_path}')
-        if self._device == 'cuda':
+        # decide default provider
+        if self._device.startswith("cuda"):
             providers = providers or ['CUDAExecutionProvider']
-        elif self._device == 'dml':
-            providers = providers or ['DmlExecutionProvider']
+            # parse the index out of your torch.device
+            cuda_idx = self.device.index if isinstance(self.device, torch.device) else 0
+            provider_options = [{'device_id': cuda_idx}]
         else:
             providers = providers or ['CPUExecutionProvider']
+            provider_options = [{}]
+
         self.ort_session = onnxruntime.InferenceSession(
-            onnx_path, providers=providers)
+            onnx_path,
+            providers=providers,
+            provider_options=provider_options
+        )
         self.model = None
 
     def infer(self, img: np.ndarray) -> np.ndarray:
